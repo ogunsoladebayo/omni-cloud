@@ -1,0 +1,35 @@
+{
+  "name": "omni-cloud",
+  "description": "Unified interface for interacting with multiple cloud storage providers",
+  "version": "1.0.0",
+  "author": "Usman Ogunsola",
+  "contributors": [
+    "Usman Ogunsola <usman.ogunsola@outlook.com> (https://github.com/ogunsoladebayo)"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "directory": "ogunsoladebayo/omni-cloud",
+    "url": "https://github.com/ogunsoladebayo/omni-cloud.git"
+  },
+  "keywords": [
+    "cloud",
+    "storage",
+    "aws",
+    "azure",
+    "google",
+    "s3",
+    "blob",
+    "gcs"
+  ],
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.4.0",
+    "typescript": "^5.5.4"
+  }
+}
