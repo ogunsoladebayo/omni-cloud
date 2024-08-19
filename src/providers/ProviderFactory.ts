@@ -2,19 +2,10 @@ import { IStorageProvider } from '../interfaces/IStorageProvider';
 import { AwsStorage } from './aws/AwsStorage';
 import { GoogleStorage } from './google/GoogleStorage';
 import { AzureStorage } from './azure/AzureStorage';
-import { IAwsConfig } from "../interfaces/IAwsConfig";
-import { IGoogleConfig } from "../interfaces/IGoogleConfig";
-import { IAzureConfig } from "../interfaces/IAzureConfig";
-
-interface ProviderConfig {
-	provider: 'aws' | 'google' | 'azure';
-	aws?: IAwsConfig;
-	google?: IGoogleConfig;
-	azure?: IAzureConfig
-}
+import { IProviderConfig } from '../interfaces/IProviderConfig';
 
 export class ProviderFactory {
-	static createProvider (config: ProviderConfig): IStorageProvider {
+	static createProvider (config: IProviderConfig): IStorageProvider {
 		switch (config.provider) {
 			case 'aws':
 				if (!config.aws) {

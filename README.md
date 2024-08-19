@@ -35,23 +35,20 @@ yarn add omni-cloud
 Configure OmniCloud with the necessary credentials for your chosen cloud storage providers.
 
 ```javascript
-const OmniCloud = require('omni-cloud');
+import { ProviderFactory, IStorageProvider } from 'omni-cloud';
 
-const storage = new OmniCloud({
+const storageConfig = {
   provider: 'aws',
   aws: {
     accessKeyId: 'your-access-key-id',
     secretAccessKey: 'your-secret-access-key',
     region: 'your-region',
-    bucketName: 'your-bucket-name'
+    bucketName: 'your-bucket-name',
   },
-  google: {
-    // Google Cloud Storage config
-  },
-  azure: {
-    // Azure Blob Storage config
-  }
-});
+};
+
+const storage: IStorageProvider = ProviderFactory.createProvider(storageConfig);
+
 ```
 
 ### Upload a File
