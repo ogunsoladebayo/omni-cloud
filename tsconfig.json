@@ -26,5 +26,9 @@
     "node_modules",
     "dist",
     "rollup.config.js"
-  ]
+  ],
+  "ts-node": {
+    "esm": true,
+    "experimentalSpecifierResolution": "node"
+  }
 }
