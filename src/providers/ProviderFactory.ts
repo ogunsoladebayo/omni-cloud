@@ -1,7 +1,7 @@
 import { IStorageProvider } from '../interfaces/IStorageProvider';
-import { AwsStorage } from './aws/AwsStorage';
-import { GoogleStorage } from './google/GoogleStorage';
-import { AzureStorage } from './azure/AzureStorage';
+import { AwsStorage } from '../providers/aws/AwsStorage';
+import { GoogleStorage } from '../providers/google/GoogleStorage';
+import { AzureStorage } from '../providers/azure/AzureStorage';
 import { IProviderConfig } from '../interfaces/IProviderConfig';
 
 export class ProviderFactory {

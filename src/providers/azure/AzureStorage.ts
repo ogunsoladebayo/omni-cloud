@@ -1,5 +1,5 @@
-import { IStorageProvider } from "../../interfaces/IStorageProvider";
-import { IAzureConfig } from "../../interfaces/IAzureConfig";
+import { IStorageProvider } from '../../';
+import { IAzureConfig } from "../../";
 
 export class AzureStorage implements IStorageProvider {
   private config: IAzureConfig;
@@ -13,10 +13,6 @@ export class AzureStorage implements IStorageProvider {
 
   downloadFile(remotePath: string, localPath: string): Promise<void> {
 	return Promise.resolve(undefined);
-  }
-
-  listFiles(directoryPath: string): Promise<string[]> {
-	return Promise.resolve([]);
   }
 
   uploadFile(localPath: string, remotePath: string): Promise<any> {

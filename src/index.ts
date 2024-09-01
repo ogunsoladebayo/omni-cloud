@@ -1,10 +1,6 @@
-// Exporting the factory for creating storage provider instances
-export { ProviderFactory } from './providers/ProviderFactory';
+export {IAwsConfig, IAzureConfig, IGoogleConfig, IProviderConfig, IStorageProvider} from "./interfaces"
 
-// Exporting the IStorageProvider interface for type support
-export { IStorageProvider } from './interfaces/IStorageProvider';
-
-// Optionally exporting individual provider classes if needed
-export { AwsStorage } from './providers/aws/AwsStorage';
-export { GoogleStorage } from './providers/google/GoogleStorage';
-export { AzureStorage } from './providers/azure/AzureStorage';
+export { AzureStorage } from "./providers/azure/AzureStorage"
+export { AwsStorage } from "./providers/aws/AwsStorage"
+export { GoogleStorage } from "./providers/google/GoogleStorage"
+export { ProviderFactory } from "./providers/ProviderFactory"

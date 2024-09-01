@@ -1,5 +1,5 @@
-import { IStorageProvider } from "../../interfaces/IStorageProvider";
-import { IGoogleConfig } from "../../interfaces/IGoogleConfig";
+import { IStorageProvider } from "../../";
+import { IGoogleConfig } from "../../";
 
 export class GoogleStorage implements IStorageProvider {
 	private config: IGoogleConfig;
@@ -13,10 +13,6 @@ export class GoogleStorage implements IStorageProvider {
 
   downloadFile(remotePath: string, localPath: string): Promise<void> {
 	return Promise.resolve(undefined);
-  }
-
-  listFiles(directoryPath: string): Promise<string[]> {
-	return Promise.resolve([]);
   }
 
   uploadFile(localPath: string, remotePath: string): Promise<any> {

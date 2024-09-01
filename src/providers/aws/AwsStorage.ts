@@ -1,11 +1,23 @@
-import { IStorageProvider } from '../../interfaces/IStorageProvider';
-import { IAwsConfig } from '../../interfaces/IAwsConfig';
+import { IAwsConfig, IStorageProvider } from '../..';
 import * as crypto from 'node:crypto';
 import { promisify } from 'node:util';
 import * as fs from 'node:fs';
 import axios from 'axios';
 
 const readFile = promisify(fs.readFile);
+
+interface RequestConfig {
+  url: string;
+  config: {
+    headers: {
+      'host': string;
+      'x-amz-date': string;
+      'x-amz-content-sha256'?: string;
+      'Authorization': string;
+      'Content-Type': string;
+    };
+  };
+}
 
 export class AwsStorage implements IStorageProvider {
   private config: IAwsConfig;
@@ -15,15 +27,17 @@ export class AwsStorage implements IStorageProvider {
   }
 
   async deleteFile (filePath: string): Promise<void> {
-    const url = this.getSignedUrl('DELETE', filePath);
+    const host = this.getHost();
+    const config = this.getRequestConfig('DELETE', host, filePath);
 
-    await axios.delete(url);
+    await axios.delete(config.url, config.config);
   }
 
   async downloadFile (remotePath: string, localPath: string): Promise<void> {
-    const url = this.getSignedUrl('GET', remotePath);
+    const host = this.getHost();
+    const config = this.getRequestConfig('GET', host, remotePath);
 
-    const response = await axios.get(url, { responseType: 'stream' });
+    const response = await axios.get(config.url, { ...config.config, responseType: 'stream' });
     const writer = fs.createWriteStream(localPath);
 
     response.data.pipe(writer);
@@ -34,62 +48,80 @@ export class AwsStorage implements IStorageProvider {
     });
   }
 
-  async listFiles (directoryPath: string): Promise<string[]> {
-    const url = this.getSignedUrl('GET', `${ directoryPath }?list-type=2`);
-
-    const response = await axios.get(url);
-    const result = response.data.match(/<Key>(.*?)<\/Key>/g);
-    return result ? result.map((key: string) => key.replace(/<\/?Key>/g, '')) : [];
-  }
-
   async uploadFile (localPath: string, remotePath: string): Promise<any> {
+    const host = this.getHost();
     const fileContent = await readFile(localPath);
-    const url = this.getSignedUrl('PUT', remotePath);
-
-    await axios.put(url, fileContent, {
-      headers: {
-        'Content-Type': 'application/octet-stream',
-      },
-    });
-
+    const config = this.getRequestConfig('PUT', host, remotePath, fileContent);
+    const newConfig = { ...config.config, headers: { ...config.config.headers, 'Content-Type': 'application/octet-stream' } };
+    await axios.put(config.url, fileContent, newConfig);
   }
 
-  private getSignature (key: string, dateStamp: string, regionName: string, serviceName: string): string {
-    const kDate = crypto.createHmac('sha256', 'AWS4' + this.config.secretAccessKey).update(dateStamp).digest();
-    const kRegion = crypto.createHmac('sha256', kDate).update(regionName).digest();
-    const kService = crypto.createHmac('sha256', kRegion).update(serviceName).digest();
-    const kSigning = crypto.createHmac('sha256', kService).update('aws4_request').digest();
-    return crypto.createHmac('sha256', kSigning).update(key).digest('hex');
+  // Create a datetime object for signing
+  private getAmzDate (): string {
+    const now = new Date();
+    const year = now.getUTCFullYear();
+    const month = String(now.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(now.getUTCDate()).padStart(2, '0');
+    const hours = String(now.getUTCHours()).padStart(2, '0');
+    const minutes = String(now.getUTCMinutes()).padStart(2, '0');
+    const seconds = String(now.getUTCSeconds()).padStart(2, '0');
+    return `${ year }${ month }${ day }T${ hours }${ minutes }${ seconds }Z`;
   }
 
-  private getSignedUrl (method: string, key: string): string {
-    const host = `${ this.config.bucketName }.s3.${ this.config.region }.amazonaws.com`;
-    const datetime = new Date().toISOString().replace(/[:-]|\.\d{3}/g, '');
-    const date = datetime.substring(0, 8);
-    const credentialScope = `${ date }/${ this.config.region }/s3/aws4_request`;
+  private getSigningKey (dateStamp: string): Buffer {
+    const secretAccessKey = this.config.secretAccessKey;
+    const region = this.config.region;
+    const kDate = crypto.createHmac('SHA256', `AWS4${ secretAccessKey }`).update(dateStamp).digest();
+    const kRegion = crypto.createHmac('SHA256', kDate).update(region).digest();
+    const kService = crypto.createHmac('SHA256', kRegion).update('s3').digest();
+    return crypto.createHmac('SHA256', kService).update('aws4_request').digest();
+  }
+
+  private getHost (): string {
+    return `${ this.config.bucketName }.s3.amazonaws.com`;
+  }
+
+  private generateCanonicalRequestHash (method: string, host: string, path: string, payloadHash: string, dateStamp: string): string {
+    const canonicalQuerystring = '';
+    const canonicalHeaders = `host:${ host }\nx-amz-content-sha256:${ payloadHash }\nx-amz-date:${ dateStamp }\n`;
+    const signedHeaders = 'host;x-amz-content-sha256;x-amz-date';
+    const canonicalRequest = `${ method }\n${ path }\n${ canonicalQuerystring }\n${ canonicalHeaders }\n${ signedHeaders }\n${ payloadHash }`;
+    return crypto.createHash('sha256').update(canonicalRequest).digest('hex');
+  }
+
+  private getSignature (signingKey: Buffer, stringToSign: string): string {
+    return crypto.createHmac('sha256', signingKey).update(stringToSign).digest('hex');
+  }
+
+  private getRequestConfig (method: string, host: string, path: string, payload?: Buffer): RequestConfig {
+    const amzDate = this.getAmzDate();
+    const dateStamp = amzDate.slice(0, 8);
+
+    const algorithm = 'AWS4-HMAC-SHA256';
+    const accessKey = this.config.accessKeyId;
+    const signingKey = this.getSigningKey(dateStamp);
     const signedHeaders = 'host;x-amz-content-sha256;x-amz-date';
 
-    const canonicalRequest = [
-      method,
-      `/${ key }`,
-      '',
-      `host:${ host }`,
-      'x-amz-content-sha256:UNSIGNED-PAYLOAD',
-      `x-amz-date:${ datetime }`,
-      '',
-      signedHeaders,
-      'UNSIGNED-PAYLOAD',
-    ].join('\n');
+    const credentialScope = `${ dateStamp }/${ this.config.region }/s3/aws4_request`;
+    const payloadHash = payload ? crypto.createHash('sha256').update(payload).digest('hex') : 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'; // SHA-256 hash of an empty string
 
-    const stringToSign = [
-      'AWS4-HMAC-SHA256',
-      datetime,
-      credentialScope,
-      crypto.createHash('sha256').update(canonicalRequest).digest('hex'),
-    ].join('\n');
+    const canonicalRequestHash = this.generateCanonicalRequestHash(method, host, path, payloadHash, amzDate);
+    const stringToSign = `${ algorithm }\n${ amzDate }\n${ credentialScope }\n${ canonicalRequestHash }`;
 
-    const signature = this.getSignature(stringToSign, date, this.config.region, 's3');
-
-    return `https://${ host }/${ key }?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=${ this.config.accessKeyId }%2F${ credentialScope }&X-Amz-Date=${ datetime }&X-Amz-Expires=86400&X-Amz-SignedHeaders=${ signedHeaders }&X-Amz-Signature=${ signature }`;
+    const signature = this.getSignature(signingKey, stringToSign);
+    const authorizationHeader = `${ algorithm } Credential=${ accessKey }/${ credentialScope }, SignedHeaders=${ signedHeaders }, Signature=${ signature }`;
+    return {
+      url: `https://${ host }${ path }`,
+      config: {
+        headers: {
+          'Authorization': authorizationHeader,
+          'Content-Type': 'text/plain',
+          'x-amz-date': amzDate,
+          'x-amz-content-sha256': payloadHash,
+          'host': host,
+        },
+      },
+    };
   }
+
 }

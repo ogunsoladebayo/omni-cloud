@@ -16,13 +16,6 @@ export interface IStorageProvider {
   downloadFile(remotePath: string, localPath: string): Promise<void>;
 
   /**
-   * Lists the files and directories at the specified path in the remote storage.
-   * @param directoryPath - The path of the directory in the remote storage.
-   * @returns A promise that resolves with an array of file and directory names.
-   */
-  listFiles(directoryPath: string): Promise<string[]>;
-
-  /**
    * Deletes a file from the remote storage provider.
    * @param filePath - The path of the file to be deleted in the remote storage.
    * @returns A promise that resolves when the delete operation is complete.

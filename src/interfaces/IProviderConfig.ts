@@ -1,6 +1,6 @@
-import { IAwsConfig } from './IAwsConfig';
-import { IGoogleConfig } from './IGoogleConfig';
-import { IAzureConfig } from './IAzureConfig';
+import { IAwsConfig } from ".";
+import { IGoogleConfig } from '.';
+import { IAzureConfig } from '.';
 
 export interface IProviderConfig {
   provider: 'aws' | 'google' | 'azure';

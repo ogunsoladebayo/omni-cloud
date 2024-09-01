@@ -4,15 +4,14 @@
 
 ## Features
 
-- [ ] Unified API for multiple cloud storage providers
-- [ ] Support for AWS S3
+- [x] Unified API for multiple cloud storage providers
+- [x] TypeScript support
+- [x] Easy configuration setup
+- [x] Support for AWS S3
 - [ ] Support for Google Cloud Storage
 - [ ] Support for Azure Blob Storage
-- [ ] Easy configuration setup
-- [ ] TypeScript support
 - [ ] Pluggable architecture for adding custom providers
 - [ ] Standardized error handling
-- [ ] Comprehensive examples and documentation
 
 ## Installation
 
