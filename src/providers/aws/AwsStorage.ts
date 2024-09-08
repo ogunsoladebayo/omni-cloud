@@ -123,5 +123,4 @@ export class AwsStorage implements IStorageProvider {
       },
     };
   }
-
 }
