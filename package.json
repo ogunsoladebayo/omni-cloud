@@ -1,7 +1,7 @@
 {
   "name": "omni-cloud",
   "description": "Unified interface for interacting with multiple cloud storage providers",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": "Usman Ogunsola",
   "contributors": [
     "Usman Ogunsola <usman.ogunsola@outlook.com> (https://github.com/ogunsoladebayo)"
@@ -35,6 +35,7 @@
     "_make-bundle": "rollup -c",
     "build": "npm run _clear && npm run _tsc && npm run _make-bundle",
     "prepare": "npm run build",
+    "publish": "npm version patch --no-git-tag-version && npm publish --access public",
     "test": "jest"
   },
   "devDependencies": {

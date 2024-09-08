@@ -8,8 +8,8 @@
 - [x] TypeScript support
 - [x] Easy configuration setup
 - [x] Support for AWS S3
+- [x] Support for Azure Blob Storage
 - [ ] Support for Google Cloud Storage
-- [ ] Support for Azure Blob Storage
 - [ ] Pluggable architecture for adding custom providers
 - [ ] Standardized error handling
 
