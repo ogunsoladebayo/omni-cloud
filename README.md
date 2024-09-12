@@ -9,7 +9,7 @@
 - [x] Easy configuration setup
 - [x] Support for AWS S3
 - [x] Support for Azure Blob Storage
-- [ ] Support for Google Cloud Storage
+- [x] Support for Google Cloud Storage
 - [ ] Pluggable architecture for adding custom providers
 - [ ] Standardized error handling
 
