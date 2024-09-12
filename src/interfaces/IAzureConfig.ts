@@ -1,5 +1,7 @@
 export interface IAzureConfig {
-	accountName: string;
-	accountKey: string;
+	credentials: {
+		accountName: string;
+		accountKey: string;
+	}
 	containerName: string;
 }

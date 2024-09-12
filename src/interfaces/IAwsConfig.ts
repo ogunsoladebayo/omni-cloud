@@ -1,6 +1,8 @@
 export interface IAwsConfig {
-	accessKeyId: string;
-	secretAccessKey: string;
-	region: string;
-	bucketName: string;
+  region: string;
+  credentials: {
+    accessKeyId: string;
+    secretAccessKey: string;
+  };
+  bucketName: string;
 }

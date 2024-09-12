@@ -69,7 +69,7 @@ export class AwsStorage implements IStorageProvider {
   }
 
   private getSigningKey (dateStamp: string): Buffer {
-    const secretAccessKey = this.config.secretAccessKey;
+    const secretAccessKey = this.config.credentials.secretAccessKey;
     const region = this.config.region;
     const kDate = crypto.createHmac('SHA256', `AWS4${ secretAccessKey }`).update(dateStamp).digest();
     const kRegion = crypto.createHmac('SHA256', kDate).update(region).digest();
@@ -98,7 +98,7 @@ export class AwsStorage implements IStorageProvider {
     const dateStamp = amzDate.slice(0, 8);
 
     const algorithm = 'AWS4-HMAC-SHA256';
-    const accessKey = this.config.accessKeyId;
+    const accessKey = this.config.credentials.accessKeyId;
     const signingKey = this.getSigningKey(dateStamp);
     const signedHeaders = 'host;x-amz-content-sha256;x-amz-date';
 

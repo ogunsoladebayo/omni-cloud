@@ -16,14 +16,10 @@ interface RequestConfig {
 }
 
 export class AzureStorage implements IStorageProvider {
-  private readonly accountName: string;
-  private accountKey: string;
-  private readonly containerName: string;
+  private config: IAzureConfig;
 
   constructor (config: IAzureConfig) {
-    this.accountName = config.accountName;
-    this.accountKey = config.accountKey;
-    this.containerName = config.containerName;
+    this.config = config;
   }
 
   async uploadFile (localPath: string, remotePath: string): Promise<void> {
@@ -67,7 +63,7 @@ export class AzureStorage implements IStorageProvider {
     headers[ 'x-ms-date' ] = now;
     headers[ 'x-ms-version' ] = '2020-10-02';
     const canonicalizedHeaders = this.getCanonicalizedHeaders(headers);
-    const canonicalizedResource = `/${ this.accountName }/${ this.containerName }/${ remotePath }`;
+    const canonicalizedResource = `/${ this.config.credentials.accountName }/${ this.config.containerName }/${ remotePath }`;
     const stringToSign = verb + '\n' + // VERB
       '\n' + // Content-Encoding
       '\n' + // Content-Language
@@ -83,11 +79,11 @@ export class AzureStorage implements IStorageProvider {
       canonicalizedHeaders + // CanonicalizedHeaders
       canonicalizedResource; // CanonicalizedResource
     console.log({ stringToSign });
-    const signature = crypto.createHmac('sha256', Buffer.from(this.accountKey, 'base64')).update(stringToSign).digest('base64');
-    const authorization = `SharedKey ${ this.accountName }:${ signature }`;
+    const signature = crypto.createHmac('sha256', Buffer.from(this.config.credentials.accountKey, 'base64')).update(stringToSign).digest('base64');
+    const authorization = `SharedKey ${ this.config.credentials.accountName }:${ signature }`;
 
     return {
-      url: `https://${ this.accountName }.blob.core.windows.net/${ this.containerName }/${ remotePath }`,
+      url: `https://${ this.config.credentials.accountName }.blob.core.windows.net/${ this.config.containerName }/${ remotePath }`,
       config: {
         headers: {
           'x-ms-date': now,

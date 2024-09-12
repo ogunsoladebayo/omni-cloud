@@ -1,6 +1,7 @@
 export interface IGoogleConfig {
-	clientEmail: string;
-	privateKey: string;
-	projectId: string;
+	credentials: {
+		client_email: string;
+		private_key: string;
+	};
 	bucketName: string;
 }
