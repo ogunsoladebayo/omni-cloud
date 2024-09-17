@@ -100,7 +100,7 @@ Deletes the file at the specified path in the configured cloud storage provider.
 
 ## Contributing
 
-Contributions are welcome! Please open an issue or submit a pull request.
+Contributions are welcome! Follow guide [here](CONTRIBUTING.md)
 
 ## License
 
