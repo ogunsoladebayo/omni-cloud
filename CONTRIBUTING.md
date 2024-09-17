@@ -73,7 +73,7 @@ git push origin feature/my-new-feature
 
 #### Step 5: Open a Pull Request
 
-Once you're done, open a [pull request](https://github.com/ogunsoladebayo/omni-cloud/pulls). Make sure to:
+Once you're done, open a [pull request](https://github.com/ogunsoladebayo/omni-cloud/pulls) to **development** branch. Make sure to:
 - Provide a detailed description of the changes you made.
 - Reference any issues or feature requests your pull request addresses.
 
