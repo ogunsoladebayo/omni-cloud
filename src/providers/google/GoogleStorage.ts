@@ -3,6 +3,7 @@ import * as crypto from 'node:crypto';
 import axios from 'axios';
 import { readFile } from 'fs/promises';
 import * as fs from 'node:fs';
+import { ErrorHandler } from '../../utils/ErrorHandler';
 
 export class GoogleStorage implements IStorageProvider {
   private config: IGoogleConfig;
@@ -23,7 +24,7 @@ export class GoogleStorage implements IStorageProvider {
 
     const response = await axios.post(url, fileContent, { headers });
     if (response.status !== 200) {
-      throw new Error(`Failed to upload file: ${ response.data }`);
+      throw new ErrorHandler('GoogleStorage', `Failed to upload file: ${ response.data }`);
     } else {
       return response.data;
     }
@@ -39,7 +40,7 @@ export class GoogleStorage implements IStorageProvider {
 
     const response = await axios.get(url, { headers, responseType: 'stream' });
     if (response.status !== 200) {
-      throw new Error(`Failed to download file: ${ response.data }`);
+      throw new ErrorHandler('NetwrokError',`Failed to download file`, response.status, response.data);
     }
     const writer = fs.createWriteStream(localPath);
 
@@ -61,7 +62,7 @@ export class GoogleStorage implements IStorageProvider {
 
     const response = await axios.delete(url, { headers });
     if (response.status !== 204) {
-      throw new Error(`Failed to delete file: ${ response.data }`);
+      throw new ErrorHandler('NetworkError', `Failed to delete file`, response.status, response.data);
     } else {
       return response.data;
     }
