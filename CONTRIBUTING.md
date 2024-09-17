@@ -86,7 +86,7 @@ To keep the codebase clean and maintainable:
 
 ## Code of Conduct
 
-Please follow our [Code of Conduct](https://github.com/ogunsoladebayo/omni-cloud/CODE_OF_CONDUCT.md) to ensure a welcoming and collaborative environment for all contributors.
+Please follow our [Code of Conduct](CODE_OF_CONDUCT.md) to ensure a welcoming and collaborative environment for all contributors.
 
 ## Questions
 
