@@ -3,8 +3,10 @@ import { IGoogleConfig } from '.';
 import { IAzureConfig } from '.';
 
 export interface IProviderConfig {
-  provider: 'aws' | 'google' | 'azure';
+  provider: Provider;
   aws?: IAwsConfig;
   google?: IGoogleConfig;
   azure?: IAzureConfig;
 }
+
+export type Provider = 'aws' | 'google' | 'azure';
