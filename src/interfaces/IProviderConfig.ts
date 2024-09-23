@@ -8,3 +8,5 @@ export interface IProviderConfig {
   google?: IGoogleConfig;
   azure?: IAzureConfig;
 }
+
+export type Provider = IProviderConfig['provider'];
