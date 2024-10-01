@@ -9,7 +9,7 @@ export class ProviderFactory {
 		switch (config.provider) {
 			case 'aws':
 				if (!config.aws) {
-					throw new Error('AWS configuration is required');
+					throw new Error('AWS configuration is required')
 				}
 				return new AwsStorage(config.aws);
 
