@@ -10,8 +10,8 @@
 - [x] Support for AWS S3
 - [x] Support for Azure Blob Storage
 - [x] Support for Google Cloud Storage
+- [x] Standardized error handling
 - [ ] Pluggable architecture for adding custom providers
-- [ ] Standardized error handling
 
 ## Installation
 
