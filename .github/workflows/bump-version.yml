@@ -1,13 +1,9 @@
 name: Bump Package Version On Merge
 
 on:
-  pull_request:
-    types: [closed]
-    branches:
-      - development
   push:
     branches:
-      - development
+      - master
 
 jobs:
   publish:
