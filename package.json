@@ -1,7 +1,7 @@
 {
   "name": "omni-cloud",
   "description": "Unified interface for interacting with multiple cloud storage providers",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "author": "Usman Ogunsola",
   "contributors": [
     "Usman Ogunsola <usman.ogunsola@outlook.com> (https://github.com/ogunsoladebayo)"
@@ -42,7 +42,7 @@
     "@rollup/plugin-typescript": "^11.1.6",
     "@types/node": "^22.4.0",
     "rimraf": "^6.0.1",
-    "rollup": "^4.21.0",
+    "rollup": "4.22.4",
     "rollup-plugin-dts": "^6.1.1",
     "ts-node": "^10.9.2",
     "tslib": "^2.6.3",
