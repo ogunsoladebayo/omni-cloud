@@ -1,12 +1,10 @@
-name: Publish Package
+name: Bump Package Version On Merge
 
 on:
   push:
     branches:
       - master
-  pull_request:
-    branches:
-      - master
+
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -23,11 +21,18 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Publish to npm
-        run: npm run _publish
+      - name: Bump version and publish to npm
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+          git config user.name "$GITHUB_ACTOR"
+          npm version patch -m "v%s"
+          # VERSION=$(node -p "require('./package.json').version")
+          # git tag ${VERSION}
+          # git push "https://$GITHUB_ACTOR:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY.git" --follow-tags
