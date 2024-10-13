@@ -34,9 +34,10 @@
     "_tsc": "tsc",
     "_make-bundle": "rollup -c",
     "build": "npm run _clear && npm run _tsc && npm run _make-bundle",
-    "prepare": "npm run build",
-    "_publish": "npm version patch --no-git-tag-version && npm publish --access public",
-    "test": "jest"
+    "_publish": "npm publish --access public",
+    "test": "jest",
+    "preversion": "npm run build",
+    "postversion": "git push && git push --follow-tags && npm run _publish"
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "^11.1.6",
