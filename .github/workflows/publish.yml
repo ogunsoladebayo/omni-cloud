@@ -1,4 +1,4 @@
-name: Bump Package Version On Merge
+name: Publish to NPM
 
 on:
   push:
