@@ -1,7 +1,7 @@
 {
   "name": "omni-cloud",
   "description": "Unified interface for interacting with multiple cloud storage providers",
-  "version": "1.1.6",
+  "version": "1.1.7",
   "author": "Usman Ogunsola",
   "contributors": [
     "Usman Ogunsola <usman.ogunsola@outlook.com> (https://github.com/ogunsoladebayo)"
