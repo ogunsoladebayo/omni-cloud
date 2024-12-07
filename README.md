@@ -1,15 +1,19 @@
 # OmniCloud
 
-**OmniCloud** is a unified interface for interacting with multiple cloud storage providers. This package simplifies the process of managing files across different cloud storage services by providing a single, consistent API.
+**OmniCloud** is a unified interface for interacting with multiple cloud storage providers. This package simplifies the
+process of managing files across different cloud storage services by providing a single, consistent API.
 
 ## Features
 
 - [x] Unified API for multiple cloud storage providers
+- [x] Upload files from the local filesystem, buffer, or stream
+- [x] Download files to the local filesystem, buffer, or stream
+- [x] Delete files
 - [x] TypeScript support
 - [x] Easy configuration setup
-- [x] Support for AWS S3
-- [x] Support for Azure Blob Storage
-- [x] Support for Google Cloud Storage
+- [x] Built in support for AWS S3
+- [x] Built in support for Azure Blob Storage
+- [x] Built in support for Google Cloud Storage
 - [x] Standardized error handling
 - [ ] Pluggable architecture for adding custom providers
 
@@ -52,47 +56,98 @@ const storage: IStorageProvider = ProviderFactory.createProvider(storageConfig);
 
 ### Upload a File
 
+#### From File System
+
 ```javascript
-async function uploadFile() {
+async function uploadFileFromFileSystem() {
   try {
-    const result = await storage.upload('path/to/local/file.txt', 'remote/file.txt');
-    console.log('File uploaded successfully:', result);
+    await storage.uploadFile('path/to/local/file.txt', 'remote/file.txt');
+    console.log('File uploaded successfully');
   } catch (error) {
     console.error('Error uploading file:', error);
   }
 }
+```
 
-uploadFile();
+#### From Buffer
+
+```javascript
+async function uploadFileFromBuffer(fileBuffer) {
+  try {
+    await storage.uploadFile(fileBuffer, 'remote/file.txt');
+    console.log('File uploaded successfully');
+  } catch (error) {
+    console.error('Error uploading file:', error);
+  }
+}
+```
+
+#### From Stream
+
+```javascript
+async function uploadFileFromStream(fileStream) {
+  try {
+    await storage.uploadFile(fileStream, 'remote/file.txt');
+    console.log('File uploaded successfully');
+  } catch (error) {
+    console.error('Error uploading file:', error);
+  }
+}
 ```
 
 ### Download a File
 
-```javascript
-async function downloadFile() {
-  try {
-    await storage.download('remote/file.txt', 'path/to/local/file.txt');
-    console.log('File downloaded successfully');
-  } catch (error) {
-    console.error('Error downloading file:', error);
-  }
-}
+#### To File System
 
-downloadFile();
+```javascript
+async function downloadFileToFileSystem() {
+  await storage.downloadFile('remote/file.txt', { type: 'file', destination: 'path/to/local/file.txt' });
+  console.log('File downloaded successfully');
+}
+```
+
+#### To Buffer
+
+```javascript
+async function downloadFileToBuffer() {
+  return await storage.downloadFile('remote/file.txt', { type: 'buffer' });
+}
+```
+
+#### To Stream
+
+```javascript
+import * as fs from 'node:fs';
+
+async function downloadFileToStream() {
+  return await storage.downloadFile('remote/file.txt', { type: 'stream' });
+}
+```
+
+### Delete a File
+
+```javascript
+async function deleteFile() {
+  await storage.delete('remote/file.txt');
+  console.log('File deleted successfully');
+}
 ```
 
 ## API
 
-### `upload(localPath: string, remotePath: string): Promise`
+### `ProviderFactory.createProvider(config: IStorageConfig): IStorageProvider`
 
-Uploads a file from the local filesystem to the specified remote path in the configured cloud storage provider.
+Creates a new instance of a cloud storage provider based on the specified configuration.
 
-### `download(remotePath: string, localPath: string): Promise`
+### `uploadFile(source: string | Buffer | Stream, destination: string): Promise`
 
-Downloads a file from the specified remote path in the configured cloud storage provider to the local filesystem.
+Uploads a file from the local filesystem, buffer, or stream to the specified remote path in the configured cloud storage
+provider.
 
-### `list(directoryPath: string): Promise`
+### `downloadFile(remotePath: string, options: { type: 'buffer' | 'stream' | 'file', destination?: string }): Promise`
 
-Lists the files and directories at the specified path in the configured cloud storage provider.
+Downloads a file from the specified remote path in the configured cloud storage provider to the local filesystem,
+buffer, or stream.
 
 ### `delete(filePath: string): Promise`
 
