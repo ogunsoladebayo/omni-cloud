@@ -44,8 +44,8 @@ const storageConfig = {
   provider: 'aws',
   aws: {
     credentials: {
-    accessKeyId: 'your-access-key-id',
-    secretAccessKey: 'your-secret-access-key',
+      accessKeyId: 'your-access-key-id',
+      secretAccessKey: 'your-secret-access-key',
     },
     region: 'your-region',
     bucketName: 'your-bucket-name',
