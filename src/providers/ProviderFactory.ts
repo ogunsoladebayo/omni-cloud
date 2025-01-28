@@ -5,28 +5,35 @@ import { AzureStorage } from '../providers/azure/AzureStorage';
 import { IProviderConfig } from '../interfaces/IProviderConfig';
 
 export class ProviderFactory {
-	static createProvider (config: IProviderConfig): IStorageProvider {
-		switch (config.provider) {
-			case 'aws':
-				if (!config.aws) {
-					throw new Error('AWS configuration is required')
-				}
-				return new AwsStorage(config.aws);
+  private static config: IProviderConfig;
 
-			case 'google':
-				if (!config.google) {
-					throw new Error('Google Cloud Storage configuration is required');
-				}
-				return new GoogleStorage(config.google);
+  static createProvider (config: IProviderConfig): IStorageProvider {
+    this.config = config;
+    switch (config.provider) {
+      case 'aws':
+        if (!config.aws) {
+          throw new Error('AWS configuration is required');
+        }
+        return new AwsStorage(config.aws);
 
-			case 'azure':
-				if (!config.azure) {
-					throw new Error('Azure Blob Storage configuration is required');
-				}
-				return new AzureStorage(config.azure);
+      case 'google':
+        if (!config.google) {
+          throw new Error('Google Cloud Storage configuration is required');
+        }
+        return new GoogleStorage(config.google);
 
-			default:
-				throw new Error(`Unsupported provider: ${ config.provider }`);
-		}
-	}
+      case 'azure':
+        if (!config.azure) {
+          throw new Error('Azure Blob Storage configuration is required');
+        }
+        return new AzureStorage(config.azure);
+
+      default:
+        throw new Error(`Unsupported provider: ${ config.provider }`);
+    }
+  }
+
+  static getProvider (): IStorageProvider {
+    return this.createProvider(this.config);
+  }
 }
