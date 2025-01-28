@@ -41,7 +41,7 @@ Configure OmniCloud with the necessary credentials for your chosen cloud storage
 import { ProviderFactory, IStorageProvider } from 'omni-cloud';
 
 const storageConfig = {
-  provider: 'aws',
+  provider: 'aws', // or 'azure' or 'google'
   aws: {
     credentials: {
       accessKeyId: 'your-access-key-id',
@@ -50,6 +50,7 @@ const storageConfig = {
     region: 'your-region',
     bucketName: 'your-bucket-name',
   },
+  // or azure: { ... } or google: { ... }
 };
 
 const storage: IStorageProvider = ProviderFactory.createProvider(storageConfig);
