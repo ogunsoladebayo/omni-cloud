@@ -28,7 +28,7 @@ export class GoogleStorage implements IStorageProvider {
       }
 
       const url = `https://storage.googleapis.com/upload/storage/v1/b/${this.config.bucketName}/o?uploadType=media&name=${remotePath}`;
-      const token = await this.getAccessToken(this.config.credentials.client_email, this.config.credentials.private_key);
+      const token = await this.getAccessToken(this.config.credentials.clientEmail, this.config.credentials.privateKey);
 
       const headers = {
         Authorization: `Bearer ${token}`,
@@ -57,7 +57,7 @@ export class GoogleStorage implements IStorageProvider {
 
     try {
       const url = `https://storage.googleapis.com/storage/v1/b/${this.config.bucketName}/o/${encodeURIComponent(remotePath)}?alt=media`;
-      const token = await this.getAccessToken(this.config.credentials.client_email, this.config.credentials.private_key);
+      const token = await this.getAccessToken(this.config.credentials.clientEmail, this.config.credentials.privateKey);
 
       const headers = {
         Authorization: `Bearer ${token}`,
@@ -90,7 +90,7 @@ export class GoogleStorage implements IStorageProvider {
   async deleteFile(filePath: string): Promise<void> {
     try {
       const url = `https://storage.googleapis.com/storage/v1/b/${this.config.bucketName}/o/${encodeURIComponent(filePath)}`;
-      const token = await this.getAccessToken(this.config.credentials.client_email, this.config.credentials.private_key);
+      const token = await this.getAccessToken(this.config.credentials.clientEmail, this.config.credentials.privateKey);
 
       const headers = {
         Authorization: `Bearer ${token}`,
